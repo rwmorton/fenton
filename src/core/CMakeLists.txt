@@ -1,0 +1,11 @@
+add_library(App_obj STATIC App.cpp)
+add_library(InputRegistry_obj STATIC InputRegistry.cpp)
+add_library(EventRegistry_obj STATIC EventRegistry.cpp)
+add_library(CallbackMap_obj STATIC CallbackMap.cpp)
+add_library(Clock_obj STATIC Clock.cpp)
+
+target_include_directories(App_obj PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(InputRegistry_obj PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(EventRegistry_obj PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(CallbackMap_obj PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(Clock_obj PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
