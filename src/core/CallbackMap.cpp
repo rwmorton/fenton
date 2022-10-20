@@ -1,7 +1,5 @@
 #include "core/CallbackMap.hpp"
 
-#include <iostream>
-
 namespace fenton
 {
 

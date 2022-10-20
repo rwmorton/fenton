@@ -2,8 +2,6 @@
 
 #include <list>
 
-#include <iostream>
-
 namespace fenton
 {
 
@@ -70,7 +68,6 @@ class Map
                 return false;
             }
 
-            std::cout << "on fire and forget, pairs size = " << m_pairs.size() << std::endl;
             // m_pairs.remove(key);
             ListIter iter = m_pairs.begin();
             while(iter != m_pairs.end())
@@ -81,7 +78,6 @@ class Map
                     break;
                 }
             }
-            std::cout << "after removing... size = " << m_pairs.size() << std::endl;
             return true;
         }
 

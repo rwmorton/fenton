@@ -53,23 +53,7 @@ class App
         static void resizeCallback(GLFWwindow* window,int w,int h);
         static void cursorEnterCallback(GLFWwindow*,int entered);
 
-        void computeScreenCoordinates(unsigned int& xScreen,unsigned int& yScreen)
-        {
-            double x,y;
-            glfwGetCursorPos(m_window,&x,&y);
-
-            int width,height;
-            glfwGetFramebufferSize(m_window,&width,&height);
-
-            int windowWidth,windowHeight;
-            glfwGetWindowSize(m_window,&windowWidth,&windowHeight);
-
-            double scaleX = width / static_cast<double>(windowWidth);
-            double scaleY = height / static_cast<double>(windowHeight);
-
-            xScreen = static_cast<int>(scaleX * x);
-            yScreen = static_cast<int>(scaleY * y);
-        }
+        void computeScreenCoordinates(unsigned int& xScreen,unsigned int& yScreen);
 
 };
 

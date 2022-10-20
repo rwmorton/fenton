@@ -1,7 +1,5 @@
 #include "core/App.hpp"
 
-#include <iostream>
-
 namespace fenton
 {
 
@@ -64,9 +62,7 @@ void App::run()
 
         unsigned int x,y;
         this->computeScreenCoordinates(x,y);
-        m_eventRegistry.updateCursor(x,y);
-        
-        // m_eventRegistry.clear();
+        m_eventRegistry.updateCursor(x,y);        
     }
 }
 
@@ -194,6 +190,24 @@ void App::cursorEnterCallback(GLFWwindow*,int entered)
     {
         m_eventRegistry.setCursorInside(false);
     }
+}
+
+void App::computeScreenCoordinates(unsigned int& xScreen,unsigned int& yScreen)
+{
+    double x,y;
+    glfwGetCursorPos(m_window,&x,&y);
+
+    int width,height;
+    glfwGetFramebufferSize(m_window,&width,&height);
+
+    int windowWidth,windowHeight;
+    glfwGetWindowSize(m_window,&windowWidth,&windowHeight);
+
+    double scaleX = width / static_cast<double>(windowWidth);
+    double scaleY = height / static_cast<double>(windowHeight);
+
+    xScreen = static_cast<int>(scaleX * x);
+    yScreen = static_cast<int>(scaleY * y);
 }
 
 } // namespace core
