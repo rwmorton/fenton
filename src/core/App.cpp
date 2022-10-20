@@ -45,7 +45,6 @@ App::App
 
 App::~App()
 {
-    this->cleanup();
     glfwDestroyWindow(m_window);
     glfwTerminate();
 }
@@ -61,15 +60,20 @@ void App::run()
         glfwSwapBuffers(m_window);
         this->processEvents();
 
-        // m_eventRegistry.clear();
-
         m_clock.update();
+
+        unsigned int x,y;
+        this->computeScreenCoordinates(x,y);
+        m_eventRegistry.updateCursor(x,y);
+        
+        // m_eventRegistry.clear();
     }
 }
 
 void App::quit()
 {
     glfwSetWindowShouldClose(m_window,GLFW_TRUE);
+    this->cleanup();
 }
 
 void App::mapCallbackToInput(const Input& input,Callback callback)
@@ -158,11 +162,10 @@ void App::mouseCallback(GLFWwindow* window,int button,int action,int mods)
             double scaleX = width / static_cast<double>(windowWidth);
             double scaleY = height / static_cast<double>(windowHeight);
 
-            m_eventRegistry.onMouseDown
-            (
-                static_cast<int>(scaleX * x),
-                static_cast<int>(scaleY * y)
-            );
+            int newX = static_cast<int>(scaleX * x);
+            int newY = static_cast<int>(scaleY * y);
+
+            m_eventRegistry.onMouseDown(newX,newY);
         }
         else
         {
@@ -179,6 +182,18 @@ void App::resizeCallback(GLFWwindow* window,int w,int h)
     int width,height;
     glfwGetWindowSize(window,&width,&height);
     glViewport(0,0,width,height);
+}
+
+void App::cursorEnterCallback(GLFWwindow*,int entered)
+{
+    if(entered)
+    {
+        m_eventRegistry.setCursorInside(true);
+    }
+    else
+    {
+        m_eventRegistry.setCursorInside(false);
+    }
 }
 
 } // namespace core

@@ -10,6 +10,9 @@ namespace fenton
 namespace core
 {
 
+// forward declarations
+class App;
+
 class EventRegistry
 {
     private:
@@ -20,8 +23,13 @@ class EventRegistry
         bool m_mouseDown;
         bool m_mousePressed;
         bool m_mouseReleased;
-        unsigned int m_mouseX;
-        unsigned int m_mouseY;
+
+        unsigned int m_cursorX;
+        unsigned int m_cursorY;
+        bool m_cursorInside;
+
+        unsigned int m_mouseBeginX,m_mouseEndX;
+        unsigned int m_mouseBeginY,m_mouseEndY;
     public:
         EventRegistry(const EventRegistry&) = delete;
         EventRegistry& operator=(const EventRegistry&) = delete;
@@ -29,6 +37,13 @@ class EventRegistry
         EventRegistry();
 
         void clear();
+
+        bool getCursorInside() const;
+        void setCursorInside(bool cursorInside);
+        void getCursor(unsigned int& x,unsigned int& y);
+
+        void getMouseBegin(unsigned int& x,unsigned int &y);
+        void getMouseEnd(unsigned int& x,unsigned int& y);
         
         // keyboard
         void onKeyDown(Keyboard key);
@@ -36,25 +51,19 @@ class EventRegistry
         bool isKeyDown(Keyboard key) const;
         bool isKeyUp(Keyboard key) const;
         bool isKeyPressed(Keyboard key) const;
-        bool isKeyRelased(Keyboard key) const;
+        bool isKeyReleased(Keyboard key) const;
 
         // mouse
         void onMouseDown(unsigned int h,unsigned int v);
         void onMouseUp();
-        bool isMouseDown(unsigned int& h,unsigned int& v);
-        bool isMousePressed(unsigned int& h,unsigned int &v);
+        bool isMouseDown(unsigned int& h,unsigned int& v) const;
+        bool isMousePressed(unsigned int& h,unsigned int &v) const;
         bool isMouseReleased() const;
 
-        friend std::ostream& operator<<(std::ostream& out,const EventRegistry& eventRegistry)
-        {
-            for(int i=0; i<NUM_KEYS; i++)
-            {
-                std::cout << eventRegistry.m_keys[i] << eventRegistry.m_keyPressed[i] << eventRegistry.m_keyReleased[i] << " ";
-            }
-            return out;
-        }
-    protected:
-        //
+        friend std::ostream& operator<<(std::ostream& out,const EventRegistry& eventRegistry);
+    private:
+        friend class App;
+        void updateCursor(unsigned int x,unsigned int y);
 };
 
 } // namespace core

@@ -2,6 +2,8 @@
 
 #include <list>
 
+#include <iostream>
+
 namespace fenton
 {
 
@@ -58,6 +60,28 @@ class Map
             // key doesn't exist, insert this pair
             m_pairs.push_back(Pair(key,value));
 
+            return true;
+        }
+
+        const bool remove(const Key& key)
+        {
+            if(!contains(key))
+            {
+                return false;
+            }
+
+            std::cout << "on fire and forget, pairs size = " << m_pairs.size() << std::endl;
+            // m_pairs.remove(key);
+            ListIter iter = m_pairs.begin();
+            while(iter != m_pairs.end())
+            {
+                if((*iter).key == key)
+                {
+                    m_pairs.erase(iter);
+                    break;
+                }
+            }
+            std::cout << "after removing... size = " << m_pairs.size() << std::endl;
             return true;
         }
 

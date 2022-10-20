@@ -20,10 +20,7 @@ class TestApp : public App
             val = 0.0;
             init();
         }
-        ~TestApp()
-        {
-            this->cleanup();
-        }
+        ~TestApp() {}
         void myFunc()
         {
             std::cout << "myFunc() executing!\n";
@@ -57,8 +54,6 @@ class TestApp : public App
         }
         void update()
         {
-            App::update();
-            // std::cout << "update" << std::endl;
             if(m_eventRegistry.isKeyDown(Keyboard::U))
             {
                 val += 1;
@@ -73,7 +68,19 @@ class TestApp : public App
             if(m_eventRegistry.isMouseReleased())
             {
                 std::cout << "mouse is released" << std::endl;
+                unsigned int x,y;
+                m_eventRegistry.getMouseBegin(x,y);
+                std::cout << "begin: (" << x << "," << y << ")";
+                m_eventRegistry.getMouseEnd(x,y);
+                std::cout << ", end: (" << x << "," << y << ")" << std::endl;
             }
+            if(m_eventRegistry.isMouseDown(h,v))
+            {
+                std::cout << "mouse is down at: (" << h << "," << v << ")" << std::endl;
+            }
+
+            // clear events
+            m_eventRegistry.clear();
         }
         void render()
         {
@@ -82,7 +89,7 @@ class TestApp : public App
             else
                 glClearColor(0.0f,0.0f,0.0f,1.0f);
         }
-        void cleanup()
+        void cleanup() override
         {
             std::cout << "Cleanup\n";
         }

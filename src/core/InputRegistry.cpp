@@ -44,7 +44,12 @@ const std::list<Mouse>& InputRegistry::buttons() const
     return m_activeMouseButtons;
 }
 
-InputRegistry::InputCombo::InputCombo(const std::list<Keyboard>& keys,const std::list<Mouse>& buttons) : m_keys(keys),m_buttons(buttons)
+InputRegistry::InputCombo::InputCombo
+(
+    const std::list<Keyboard>& keys,
+    const std::list<Mouse>& buttons
+) : m_keys(keys),
+    m_buttons(buttons)
 {
     m_keys.sort();
     m_buttons.sort();
