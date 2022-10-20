@@ -14,19 +14,28 @@ App::App
 (
     int width,int height,
     const std::string& title,
-    bool poll = true
+    bool poll = true,
+    bool fullscreen = false
 )
 :   m_width(width),m_height(height),
     m_title(title),
     m_window(nullptr),
-    m_poll(poll)
+    m_poll(poll),
+    m_fullscreen(fullscreen)
 {
     // initialize GLFW
     if(!glfwInit()) {
         glfwTerminate();
     }
 
-    m_window = glfwCreateWindow(m_width,m_height,m_title.c_str(),nullptr,nullptr);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+    // glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+
+    m_window = m_fullscreen
+        ? glfwCreateWindow(m_width,m_height,m_title.c_str(),glfwGetPrimaryMonitor(),nullptr)
+        : glfwCreateWindow(m_width,m_height,m_title.c_str(),nullptr,nullptr);
     if(!m_window) {
         glfwTerminate();
     }
@@ -34,11 +43,11 @@ App::App
     // register all callbacks with GLFW
     this->registerCallbacks();
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-
     glfwMakeContextCurrent(m_window);
+
+    // initialize GLEW
+    glewExperimental = GL_TRUE;
+    glewInit();
 }
 
 App::~App()
@@ -50,19 +59,18 @@ App::~App()
 void App::run()
 {
     while(!glfwWindowShouldClose(m_window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-
         this->update();
         this->render();
 
-        glfwSwapBuffers(m_window);
         this->processEvents();
+
+        glfwSwapBuffers(m_window);
 
         m_clock.update();
 
         unsigned int x,y;
         this->computeScreenCoordinates(x,y);
-        m_eventRegistry.updateCursor(x,y);        
+        m_eventRegistry.updateCursor(x,y);
     }
 }
 

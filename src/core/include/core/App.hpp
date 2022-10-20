@@ -1,8 +1,10 @@
 #pragma once
 
-#include <string>
-
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+#include <string>
 
 #include "core/InputRegistry.hpp"
 #include "core/EventRegistry.hpp"
@@ -18,11 +20,12 @@ namespace core
 class App
 {
     private:
+    protected:
         int m_width,m_height;
         std::string m_title;
         GLFWwindow* m_window;
         bool m_poll;
-    protected:
+        bool m_fullscreen;
         static InputRegistry m_inputRegistry;
         static EventRegistry m_eventRegistry;
         static CallbackMap m_callbackMap;
@@ -32,7 +35,7 @@ class App
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
-        App(int width,int height,const std::string& title,bool poll);
+        App(int width,int height,const std::string& title,bool poll,bool fullscreen);
         virtual ~App();
 
         void run();

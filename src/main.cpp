@@ -1,5 +1,3 @@
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 
 #include "core/App.hpp"
@@ -14,7 +12,7 @@ class TestApp : public App
         bool toggle;
         double val;
     public:
-        TestApp(int w,int h,const std::string& title,bool poll) : App(w,h,title,poll)
+        TestApp(int w,int h,const std::string& title,bool poll,bool fullscreen) : App(w,h,title,poll,fullscreen)
         {
             toggle = false;
             val = 0.0;
@@ -51,6 +49,9 @@ class TestApp : public App
             {
                 std::cout << "Pressed keys A,B and C all together.\n";
             });
+
+            GLuint vao;
+            glGenVertexArrays(1,&vao);
         }
         void update()
         {
@@ -84,10 +85,20 @@ class TestApp : public App
         }
         void render()
         {
-            if(toggle)
-                glClearColor(1.0f,0.0f,0.0f,1.0f);
-            else
-                glClearColor(0.0f,0.0f,0.0f,1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glClearColor(0.0f,0.0f,0.0f,1.0f);
+            float ratio = static_cast<double>(m_width) / static_cast<double>(m_height);
+
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(0,static_cast<float>(m_width),static_cast<float>(m_height),0,0,1);
+
+            glMatrixMode(GL_MODELVIEW);
+            glBegin(GL_LINES);
+            glColor3f(1.0f,1.0f,1.0f);
+            glVertex2i(0,0);
+            glVertex2f(400,300);
+            glEnd();
         }
         void cleanup() override
         {
@@ -98,7 +109,7 @@ class TestApp : public App
 };
 
 int main() {
-    TestApp app(800,600,"app",true);
+    TestApp app(800,600,"app",true,false);
     app.run();
 
     return 0;

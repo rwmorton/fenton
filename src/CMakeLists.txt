@@ -10,5 +10,6 @@ target_link_libraries(main EventRegistry_obj)
 target_link_libraries(main CallbackMap_obj)
 target_link_libraries(main Clock_obj)
 
+target_link_libraries(main GLEW)
 target_link_libraries(main glfw)
 target_link_libraries(main GL)
