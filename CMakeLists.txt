@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.5 FATAL_ERROR)
 
-project(fenton LANGUAGES CXX)
+project(fenton LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)

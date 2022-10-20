@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "core/App.hpp"
 
@@ -6,11 +7,31 @@ using namespace fenton::core;
 
 const double INCR = 0.001;
 
+// Shader sources
+const GLchar* vertexSource = R"glsl(
+    #version 150 core
+    in vec2 position;
+    void main()
+    {
+        gl_Position = vec4(position, 0.0, 1.0);
+    }
+)glsl";
+const GLchar* fragmentSource = R"glsl(
+    #version 150 core
+    out vec4 outColor;
+    uniform vec3 triangleColor;
+    void main()
+    {
+        outColor = vec4(triangleColor, 1.0);
+    }
+)glsl";
+
 class TestApp : public App
 {
     private:
         bool toggle;
         double val;
+        GLuint vao,vbo,vertexShader,fragmentShader,shaderProgram,posAttrib,uniColor;
     public:
         TestApp(int w,int h,const std::string& title,bool poll,bool fullscreen) : App(w,h,title,poll,fullscreen)
         {
@@ -50,8 +71,39 @@ class TestApp : public App
                 std::cout << "Pressed keys A,B and C all together.\n";
             });
 
-            GLuint vao;
             glGenVertexArrays(1,&vao);
+            glBindVertexArray(vao);
+
+            GLfloat vertices[] = {
+                0.0f,0.5f,
+                0.5f,-0.5f,
+                -0.5f,-0.5f
+            };
+
+            glGenBuffers(1,&vbo);
+            glBindBuffer(GL_ARRAY_BUFFER,vbo);
+            glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+            vertexShader = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertexShader,1,&vertexSource,nullptr);
+            glCompileShader(vertexShader);
+
+            fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragmentShader,1,&fragmentSource,nullptr);
+            glCompileShader(fragmentShader);
+
+            shaderProgram = glCreateProgram();
+            glAttachShader(shaderProgram,vertexShader);
+            glAttachShader(shaderProgram,fragmentShader);
+            glBindFragDataLocation(shaderProgram,0,"outColor");
+            glLinkProgram(shaderProgram);
+            glUseProgram(shaderProgram);
+
+            posAttrib = glGetAttribLocation(shaderProgram,"position");
+            glEnableVertexAttribArray(posAttrib);
+            glVertexAttribPointer(posAttrib,2,GL_FLOAT,GL_FALSE,0,0);
+
+            uniColor = glGetUniformLocation(shaderProgram,"triangleColor");
         }
         void update()
         {
@@ -79,30 +131,33 @@ class TestApp : public App
             {
                 std::cout << "mouse is down at: (" << h << "," << v << ")" << std::endl;
             }
+            
+            // update triangle colors
+            double t = m_clock.current();
+            glUniform3f
+            (
+                uniColor,
+                (
+                    std::sin(t * 1.0f) + 1.0f),
+                    (std::sin(t * 2.0f) + 1.0f),
+                    (std::sin(t * 3.0f) + 1.0f)
+            );
 
             // clear events
             m_eventRegistry.clear();
         }
         void render()
         {
+            glClearColor(0.f,0.f,0.f,1.f);
             glClear(GL_COLOR_BUFFER_BIT);
-            glClearColor(0.0f,0.0f,0.0f,1.0f);
-            float ratio = static_cast<double>(m_width) / static_cast<double>(m_height);
 
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(0,static_cast<float>(m_width),static_cast<float>(m_height),0,0,1);
-
-            glMatrixMode(GL_MODELVIEW);
-            glBegin(GL_LINES);
-            glColor3f(1.0f,1.0f,1.0f);
-            glVertex2i(0,0);
-            glVertex2f(400,300);
-            glEnd();
+            glDrawArrays(GL_TRIANGLES,0,3);
         }
         void cleanup() override
         {
             std::cout << "Cleanup\n";
+            glDeleteShader(vertexShader);
+            glDeleteShader(fragmentShader);
         }
     private:
     protected:

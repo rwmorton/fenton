@@ -45,9 +45,12 @@ App::App
 
     glfwMakeContextCurrent(m_window);
 
-    // initialize GLEW
-    glewExperimental = GL_TRUE;
-    glewInit();
+    // initialize GLAD
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        this->quit();
+    }
 }
 
 App::~App()
