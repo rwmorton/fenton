@@ -16,6 +16,6 @@ const GLchar* fragmentSource = R"glsl(
     out vec4 outColor;
     void main()
     {
-        outColor = vec4(0.5,0.4,0.9, 1.0);
+        outColor = vec4(0.9,0.4,0.1, 1.0);
     }
 )glsl";

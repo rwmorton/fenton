@@ -28,7 +28,7 @@ bool VertexBuffer::create(VertexFormat vertexFormat,unsigned int numVertices,voi
     glBufferData
     (
         GL_ARRAY_BUFFER,
-        6 * 3 * sizeof(float), // numVertices*VertexFormatSize[vertexFormat],
+        numVertices*VertexFormatSize[vertexFormat],
         data,
         usage
     );

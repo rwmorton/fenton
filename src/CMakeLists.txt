@@ -17,6 +17,7 @@ target_link_libraries(main Clock_obj)
 # graphics
 target_link_libraries(main VertexBuffer_obj)
 target_link_libraries(main Renderer_obj)
+target_link_libraries(main Shader_obj)
 
 # extern
 target_link_libraries(main glad_obj)

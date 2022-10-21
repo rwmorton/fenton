@@ -5,18 +5,10 @@
 #include "graphics/Renderer.hpp"
 
 #include "shaders.hpp"
+#include "vertices.hpp"
 
 using namespace fenton::core;
 using namespace fenton::graphics;
-
-GLfloat vertices[] = {
-    -0.90, -0.90, 0.0, // Triangle 1
-    0.85, -0.90, 0.0,
-    -0.90, 0.85, 0.0,
-    0.90, -0.85, 0.0, // Triangle 2
-    0.90, 0.90, 0.0,
-    -0.85, 0.90, 0.0
-};
 
 class TestVBO : public App
 {

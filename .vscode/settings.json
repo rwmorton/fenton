@@ -47,6 +47,8 @@
         "typeinfo": "cpp",
         "map": "cpp",
         "source_location": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     }
 }
