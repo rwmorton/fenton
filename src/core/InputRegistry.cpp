@@ -57,8 +57,8 @@ InputRegistry::InputCombo::InputCombo
 
 const bool InputRegistry::InputCombo::operator==(const InputCombo& rhs) const
 {
-    std::list<Keyboard>::const_iterator kIter = m_keys.begin();
-    std::list<Keyboard>::const_iterator rhskIter = rhs.m_keys.begin();
+    auto kIter = m_keys.begin();
+    auto rhskIter = rhs.m_keys.begin();
     while(kIter != m_keys.end()) {
         if(*kIter != *rhskIter) {
             return false;
@@ -67,8 +67,8 @@ const bool InputRegistry::InputCombo::operator==(const InputCombo& rhs) const
         std::advance(rhskIter,1);
     }
 
-    std::list<Mouse>::const_iterator bIter = m_buttons.begin();
-    std::list<Mouse>::const_iterator rhsbIter = rhs.m_buttons.begin();
+    auto bIter = m_buttons.begin();
+    auto rhsbIter = rhs.m_buttons.begin();
     while(bIter != m_buttons.end()) {
         if(*bIter != *rhsbIter) {
             return false;

@@ -26,12 +26,56 @@ const GLchar* fragmentSource = R"glsl(
     }
 )glsl";
 
+class Triangle
+{
+    private:
+        GLuint vao,vbo,vertexShader,fragmentShader,shaderProgram;
+    public:
+        Triangle()
+        {
+            glGenVertexArrays(1,&vao);
+            glBindVertexArray(vao);
+
+            GLfloat vertices[] = {
+                -1.f,1.f,
+                1.f,0.f,
+                0.f,-1.f
+            };
+
+            glGenBuffers(1,&vbo);
+            glBindBuffer(GL_ARRAY_BUFFER,vbo);
+            glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+            vertexShader = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertexShader,1,&vertexSource,nullptr);
+            glCompileShader(vertexShader);
+
+            fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragmentShader,1,&fragmentSource,nullptr);
+            glCompileShader(fragmentShader);
+
+            shaderProgram = glCreateProgram();
+            glAttachShader(shaderProgram,vertexShader);
+            glAttachShader(shaderProgram,fragmentShader);
+            glLinkProgram(shaderProgram);
+        }
+
+        void render()
+        {
+            glUseProgram(shaderProgram);
+            glBindVertexArray(vao);
+            glDrawArrays(GL_TRIANGLES,0,3);
+            glBindVertexArray(0);
+        }
+};
+
 class TestApp : public App
 {
     private:
         bool toggle;
         double val;
-        GLuint vao,vbo,vertexShader,fragmentShader,shaderProgram,posAttrib,uniColor;
+        GLuint vao,vbo,ebo,vertexShader,fragmentShader,shaderProgram,posAttrib,uniColor;
+        Triangle tri;
     public:
         TestApp(int w,int h,const std::string& title,bool poll,bool fullscreen) : App(w,h,title,poll,fullscreen)
         {
@@ -39,7 +83,10 @@ class TestApp : public App
             val = 0.0;
             init();
         }
-        ~TestApp() {}
+        ~TestApp()
+        {
+            this->cleanup();
+        }
         void myFunc()
         {
             std::cout << "myFunc() executing!\n";
@@ -74,15 +121,24 @@ class TestApp : public App
             glGenVertexArrays(1,&vao);
             glBindVertexArray(vao);
 
-            GLfloat vertices[] = {
-                0.0f,0.5f,
-                0.5f,-0.5f,
-                -0.5f,-0.5f
+            float vertices[] = {
+                0.5f, 0.5f, 0.0f, // top right
+                0.5f, -0.5f, 0.0f, // bottom right
+                -0.5f, -0.5f, 0.0f, // bottom left
+                -0.5f, 0.5f, 0.0f // top left
+            };
+            unsigned int indices[] = { // note that we start from 0!
+                0, 1, 3, // first triangle
+                1, 2, 3 // second triangle
             };
 
             glGenBuffers(1,&vbo);
             glBindBuffer(GL_ARRAY_BUFFER,vbo);
             glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+            glGenBuffers(1,&ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
 
             vertexShader = glCreateShader(GL_VERTEX_SHADER);
             glShaderSource(vertexShader,1,&vertexSource,nullptr);
@@ -97,13 +153,16 @@ class TestApp : public App
             glAttachShader(shaderProgram,fragmentShader);
             glBindFragDataLocation(shaderProgram,0,"outColor");
             glLinkProgram(shaderProgram);
-            glUseProgram(shaderProgram);
 
             posAttrib = glGetAttribLocation(shaderProgram,"position");
             glEnableVertexAttribArray(posAttrib);
-            glVertexAttribPointer(posAttrib,2,GL_FLOAT,GL_FALSE,0,0);
+            glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(float),0);
 
             uniColor = glGetUniformLocation(shaderProgram,"triangleColor");
+
+            glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+
+            glClearColor(0.f,0.f,0.f,1.f);
         }
         void update()
         {
@@ -148,16 +207,27 @@ class TestApp : public App
         }
         void render()
         {
-            glClearColor(0.f,0.f,0.f,1.f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            glDrawArrays(GL_TRIANGLES,0,3);
+            glUseProgram(shaderProgram);
+            glBindVertexArray(vao);
+            // glDrawArrays(GL_TRIANGLES,0,3);
+            glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+            glBindVertexArray(0);
+
+            // tri.render();
+
+            glFinish(); // testing only
         }
         void cleanup() override
         {
             std::cout << "Cleanup\n";
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
+            glDeleteProgram(shaderProgram);
+            glDeleteVertexArrays(1,&vao);
+            glDeleteBuffers(1,&vbo);
+            glDeleteBuffers(1,&ebo);
         }
     private:
     protected:

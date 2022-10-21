@@ -55,7 +55,7 @@ class App
         static void resizeCallback(GLFWwindow* window,int w,int h);
         static void cursorEnterCallback(GLFWwindow*,int entered);
 
-        void computeScreenCoordinates(unsigned int& xScreen,unsigned int& yScreen);
+        static void computeScreenCoordinates(GLFWwindow* window,unsigned int& xScreen,unsigned int& yScreen);
 
 };
 

@@ -26,7 +26,6 @@ class Map
     };
 
     using List = std::list<Pair>;
-    using ListIter = std::list<Pair>::const_iterator;
 
     private:
         List m_pairs;
@@ -45,7 +44,7 @@ class Map
         const bool insert(const Key& key,const Value& value)
         {
             // first search for existing key
-            ListIter iter = m_pairs.begin();
+            auto iter = m_pairs.begin();
             while(iter != m_pairs.end())
             {
                 if((*iter).key == key)
@@ -69,7 +68,7 @@ class Map
             }
 
             // m_pairs.remove(key);
-            ListIter iter = m_pairs.begin();
+            auto iter = m_pairs.begin();
             while(iter != m_pairs.end())
             {
                 if((*iter).key == key)
@@ -83,7 +82,7 @@ class Map
 
         const bool contains(const Key& key) const
         {
-            ListIter iter = m_pairs.begin();
+            auto iter = m_pairs.begin();
             while(iter != m_pairs.end())
             {
                 if((*iter).key == key)
@@ -98,7 +97,7 @@ class Map
 
         Value get(const Key& key)
         {
-            ListIter iter = m_pairs.begin();
+            auto iter = m_pairs.begin();
             while(iter != m_pairs.end())
             {
                 if((*iter).key == key)

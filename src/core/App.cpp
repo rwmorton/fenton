@@ -31,6 +31,8 @@ App::App
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES,4);
     // glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
 
     m_window = m_fullscreen
@@ -61,6 +63,8 @@ App::~App()
 
 void App::run()
 {
+    unsigned int x,y;
+    
     while(!glfwWindowShouldClose(m_window)) {
         this->update();
         this->render();
@@ -71,8 +75,7 @@ void App::run()
 
         m_clock.update();
 
-        unsigned int x,y;
-        this->computeScreenCoordinates(x,y);
+        App::computeScreenCoordinates(m_window,x,y);
         m_eventRegistry.updateCursor(x,y);
     }
 }
@@ -157,21 +160,8 @@ void App::mouseCallback(GLFWwindow* window,int button,int action,int mods)
     {
         if(action == Action::PRESS)
         {
-            double x,y;
-            glfwGetCursorPos(window,&x,&y);
-
-            int width,height;
-            glfwGetFramebufferSize(window,&width,&height);
-
-            int windowWidth,windowHeight;
-            glfwGetWindowSize(window,&windowWidth,&windowHeight);
-
-            double scaleX = width / static_cast<double>(windowWidth);
-            double scaleY = height / static_cast<double>(windowHeight);
-
-            int newX = static_cast<int>(scaleX * x);
-            int newY = static_cast<int>(scaleY * y);
-
+            unsigned int newX,newY;
+            App::computeScreenCoordinates(window,newX,newY);
             m_eventRegistry.onMouseDown(newX,newY);
         }
         else
@@ -203,19 +193,19 @@ void App::cursorEnterCallback(GLFWwindow*,int entered)
     }
 }
 
-void App::computeScreenCoordinates(unsigned int& xScreen,unsigned int& yScreen)
+void App::computeScreenCoordinates(GLFWwindow* window,unsigned int& xScreen,unsigned int& yScreen)
 {
     double x,y;
-    glfwGetCursorPos(m_window,&x,&y);
+    glfwGetCursorPos(window,&x,&y);
 
     int width,height;
-    glfwGetFramebufferSize(m_window,&width,&height);
+    glfwGetFramebufferSize(window,&width,&height);
 
     int windowWidth,windowHeight;
-    glfwGetWindowSize(m_window,&windowWidth,&windowHeight);
+    glfwGetWindowSize(window,&windowWidth,&windowHeight);
 
-    double scaleX = width / static_cast<double>(windowWidth);
-    double scaleY = height / static_cast<double>(windowHeight);
+    const double scaleX = width / static_cast<double>(windowWidth);
+    const double scaleY = height / static_cast<double>(windowHeight);
 
     xScreen = static_cast<int>(scaleX * x);
     yScreen = static_cast<int>(scaleY * y);
