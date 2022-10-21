@@ -47,6 +47,8 @@ App::App
 
     glfwMakeContextCurrent(m_window);
 
+    glfwSwapInterval(0); // disable V-sync
+
     // initialize GLAD
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
