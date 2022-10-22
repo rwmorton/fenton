@@ -9,6 +9,13 @@ namespace core
 InputRegistry App::m_inputRegistry = InputRegistry();
 EventRegistry App::m_eventRegistry = EventRegistry();
 CallbackMap App::m_callbackMap = CallbackMap();
+double App::m_lastCursorX;
+double App::m_lastCursorY;
+double App::m_cursorOffsetX;
+double App::m_cursorOffsetY;
+bool App::m_firstCursor;
+double App::m_scrollX;
+double App::m_scrollY;
 
 App::App
 (
@@ -48,6 +55,7 @@ App::App
     glfwMakeContextCurrent(m_window);
 
     glfwSwapInterval(0); // disable V-sync
+    glfwSetInputMode(m_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
     // initialize GLAD
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -114,6 +122,8 @@ void App::registerCallbacks()
     glfwSetKeyCallback(m_window,App::keyCallback);
     glfwSetMouseButtonCallback(m_window,App::mouseCallback);
     glfwSetWindowSizeCallback(m_window,App::resizeCallback);
+    glfwSetCursorPosCallback(m_window,App::cursorCallback);
+    glfwSetScrollCallback(m_window,App::scrollCallback);
 }
 
 // callbacks
@@ -213,6 +223,28 @@ void App::computeScreenCoordinates(GLFWwindow* window,unsigned int& xScreen,unsi
 
     xScreen = static_cast<int>(scaleX * x);
     yScreen = static_cast<int>(scaleY * y);
+}
+
+void App::cursorCallback(GLFWwindow* window,double xPos,double yPos)
+{
+    if(m_firstCursor)
+    {
+        App::m_lastCursorX = xPos;
+        App::m_lastCursorY = yPos;
+        App::m_firstCursor = false;
+    }
+
+    App::m_cursorOffsetX = xPos - m_lastCursorX;
+    App::m_cursorOffsetY = m_lastCursorY - yPos;
+    
+    App::m_lastCursorX = xPos;
+    App::m_lastCursorY = yPos;
+}
+
+void App::scrollCallback(GLFWwindow* window,double xOffset,double yOffset)
+{
+    App::m_scrollX = xOffset;
+    App::m_scrollY = yOffset;
 }
 
 } // namespace core

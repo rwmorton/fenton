@@ -69,6 +69,11 @@ static const Input Down = Input({Keyboard::DOWN},{});
 static const Input Left = Input({Keyboard::LEFT},{});
 static const Input Right = Input({Keyboard::RIGHT},{});
 
+static const Input W = Input({Keyboard::W},{});
+static const Input S = Input({Keyboard::S},{});
+static const Input A = Input({Keyboard::A},{});
+static const Input D = Input({Keyboard::D},{});
+
 static const Input T = Input({Keyboard::T},{});
 static const Input E = Input({Keyboard::E},{});
 static const Input P = Input({Keyboard::P},{});

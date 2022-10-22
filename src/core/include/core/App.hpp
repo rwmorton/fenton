@@ -29,6 +29,10 @@ class App
         static EventRegistry m_eventRegistry;
         static CallbackMap m_callbackMap;
         Clock m_clock;
+        static double m_lastCursorX,m_lastCursorY;
+        static double m_cursorOffsetX,m_cursorOffsetY;
+        static bool m_firstCursor;
+        static double m_scrollX,m_scrollY;
     public:
         // prevent copies
         App(const App&) = delete;
@@ -54,6 +58,8 @@ class App
         static void mouseCallback(GLFWwindow* window,int button,int action,int mods);
         static void resizeCallback(GLFWwindow* window,int w,int h);
         static void cursorEnterCallback(GLFWwindow*,int entered);
+        static void cursorCallback(GLFWwindow* window,double xPos,double yPos);
+        static void scrollCallback(GLFWwindow* window,double xOffset,double yOffset);
 
         static void computeScreenCoordinates(GLFWwindow* window,unsigned int& xScreen,unsigned int& yScreen);
 
