@@ -69,7 +69,7 @@ bool VertexBuffer::create(VertexFormat vertexFormat,unsigned int numVertices,voi
     return true;
 }
 
-void VertexBuffer::bind()
+void VertexBuffer::bind() const
 {
     glBindVertexArray(m_vaoID);
 }

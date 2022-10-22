@@ -46,7 +46,7 @@ class App
         virtual void render() = 0;
         virtual void cleanup() = 0;
     private:
-        void processEvents();
+        void pollEvents();
         // callbacks
         void registerCallbacks();
         static void errorCallback(int error,const char* description);

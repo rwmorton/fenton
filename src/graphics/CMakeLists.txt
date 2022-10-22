@@ -9,5 +9,6 @@ target_include_directories(
     Shader_obj
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../core/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../core/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../extern/
 )

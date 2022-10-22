@@ -12,7 +12,7 @@ class Renderer
 {
     private:
     public:
-        void draw(PrimitiveType primitiveType,VertexBuffer vertexBuffer,unsigned int numVertices);
+        void draw(PrimitiveType primitiveType,const VertexBuffer& vertexBuffer,unsigned int numVertices);
 };
 
 } // namespace graphics

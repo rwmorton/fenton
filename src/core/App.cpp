@@ -32,7 +32,7 @@ App::App
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES,4);
+    glfwWindowHint(GLFW_SAMPLES,0);
     // glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
 
     m_window = m_fullscreen
@@ -68,17 +68,19 @@ void App::run()
     unsigned int x,y;
     
     while(!glfwWindowShouldClose(m_window)) {
+        glClearColor(0.f,0.f,0.f,1.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         this->update();
         this->render();
-
-        this->processEvents();
-
-        glfwSwapBuffers(m_window);
 
         m_clock.update();
 
         App::computeScreenCoordinates(m_window,x,y);
         m_eventRegistry.updateCursor(x,y);
+
+        glfwSwapBuffers(m_window);
+        this->pollEvents();
     }
 }
 
@@ -93,7 +95,7 @@ void App::mapCallbackToInput(const Input& input,Callback callback)
     m_callbackMap.set(input,callback);
 }
 
-void App::processEvents()
+void App::pollEvents()
 {
     if(m_poll)
     {

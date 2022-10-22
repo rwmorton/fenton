@@ -22,7 +22,7 @@ class VertexBuffer final
         ~VertexBuffer();
 
         bool create(VertexFormat vertexFormat,unsigned int numVertices,void* data,BufferDataUsage usage);
-        void bind();
+        void bind() const;
         void destroy();
 };
 
